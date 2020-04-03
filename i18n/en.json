@@ -1,5 +1,5 @@
 {
-  "title": "Let me go",
+  "title": "CONFIRMATION OF MOVEMENT",
   "post_code": "Postal code of residence",
   "id": "Cyprus ID or ARC",
   "purpose": "Purpose of movement",
@@ -11,9 +11,9 @@
   "purpose_6" : "Movement for physical activity or for the needs of a pet, alone or in a group of no more than two persons and in areas adjacent to their homes",
   "purpose_7" : "Movement with the purpose of attending a ceremony (eg funeral, wedding, christening) of first and second degree relatives, not exceeding 10 persons",
   "purpose_8" : "Movement for any other purpose which may be justified under the prohibition measures",
-  "to": "To",
+  "to": "To number",
   "on_your_mobile": "On your mobile phone",
-  "send_message": "Send SMS message with text",
+  "send_message": "Send SMS message",
   "to_short_number": "to short number",
   "warning": "Citizens are obliged to carry with them their ID card or ARC and to present the SMS sent to their mobile phones in case of a police check."
 }

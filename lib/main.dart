@@ -2,6 +2,7 @@ import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:letmego/localization.dart';
+import 'package:letmego/postal.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void main() {
@@ -71,8 +72,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String _shortNumber = '8998';
   List<String> _purposes = <String>['1', '2', '3', '4', '5', '6', '7', '8'];
 
-  TextEditingController _controllerPostCode, _controllerIdPassport;
-  String _postCode = '';
+  TextEditingController _controllerPostalCode, _controllerIdPassport;
+  String _postalCode = '';
   String _id = '';
   String _purpose = '1';
 
@@ -83,12 +84,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> initPlatformState() async {
-    _controllerPostCode = TextEditingController(text: _postCode);
+    _controllerPostalCode = TextEditingController(text: _postalCode);
     _controllerIdPassport = TextEditingController(text: _id);
   }
 
   String _messageText() {
-    return "${_purpose} ${_id} ${_postCode}";
+    return "${_purpose} ${_id} ${_postalCode}";
   }
 
   void _sendSMS() {
@@ -185,6 +186,89 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  _showPosition() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return FutureBuilder<String>(
+              future: Postal().postalCode(),
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                List<Widget> children;
+                List<Widget> actions = <Widget>[];
+
+                if (snapshot.hasData) {
+                  String postalCode = snapshot.data;
+                  children = <Widget>[
+                    Text(
+                      postalCode,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .apply(fontSizeFactor: 2.0),
+                    )
+                  ];
+                  actions = <Widget>[
+                    FlatButton(
+                      child: Text('No'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    FlatButton(
+                      child: Text('Yes'),
+                      onPressed: () {
+                        setState(() {
+                          _controllerPostalCode.text = postalCode;
+                          _postalCode = postalCode;
+                        });
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ];
+                } else if (snapshot.hasError) {
+                  children = <Widget>[Text('Location failed')];
+                  actions = <Widget>[
+                    FlatButton(
+                      child: Text('OK'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ];
+                } else {
+                  children = <Widget>[
+                    SizedBox(
+                      child: CircularProgressIndicator(),
+                      width: 30,
+                      height: 30,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text("getting..."),
+                    )
+                  ];
+                  actions = <Widget>[
+                    FlatButton(
+                      child: Text('Cancel'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ];
+                }
+                return AlertDialog(
+                  title: Center(child: Text('Your postal code')),
+                  content: SingleChildScrollView(
+                    child: Column(
+                      children: children,
+                    ),
+                  ),
+                  actions: actions,
+                );
+              });
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -277,10 +361,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: TextField(
                   decoration: InputDecoration(
                       labelText:
-                          AppLocalizations.of(context).translate("post_code")),
-                  controller: _controllerPostCode,
+                          AppLocalizations.of(context).translate("post_code"),
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.my_location),
+                        onPressed: () => _showPosition(),
+                      )),
+                  controller: _controllerPostalCode,
                   onChanged: (String value) => setState(() {
-                    _postCode = value;
+                    _postalCode = value;
                   }),
                   keyboardType: TextInputType.numberWithOptions(
                       signed: false, decimal: false),
