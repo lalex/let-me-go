@@ -32,6 +32,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       supportedLocales: [Locale('en'), Locale('el'), Locale('ru')],
       localizationsDelegates: [
         _appLocalizationsDelegate,
@@ -302,28 +303,30 @@ class _MyHomePageState extends State<MyHomePage> {
               fontSize: 14,
             )),
         actions: <Widget>[
-          DropdownButton<String>(
-            value: _language,
-            iconSize: 24,
-            elevation: 16,
-            onChanged: (String newValue) {
-              widget.localeChangeCallback(Locale(newValue));
-              setState(() {
-                _language = newValue;
-              });
-            },
-            items: _languages
-                .map<String, DropdownMenuItem<String>>(
-                    (String lang, String title) {
-                  return MapEntry<String, DropdownMenuItem<String>>(
-                      lang,
-                      DropdownMenuItem<String>(
-                        value: lang,
-                        child: Text(title),
-                      ));
-                })
-                .values
-                .toList(),
+          Center(
+            child: DropdownButton<String>(
+              value: _language,
+              iconSize: 24,
+              elevation: 16,
+              onChanged: (String newValue) {
+                widget.localeChangeCallback(Locale(newValue));
+                setState(() {
+                  _language = newValue;
+                });
+              },
+              items: _languages
+                  .map<String, DropdownMenuItem<String>>(
+                      (String lang, String title) {
+                    return MapEntry<String, DropdownMenuItem<String>>(
+                        lang,
+                        DropdownMenuItem<String>(
+                          value: lang,
+                          child: Text(title),
+                        ));
+                  })
+                  .values
+                  .toList(),
+            ),
           ),
         ],
       ),
@@ -362,7 +365,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Container(
