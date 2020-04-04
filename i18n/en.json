@@ -15,5 +15,13 @@
   "on_your_mobile": "On your mobile phone",
   "send_message": "Send SMS message",
   "to_short_number": "to short number",
-  "warning": "Citizens are obliged to carry with them their ID card or ARC and to present the SMS sent to their mobile phones in case of a police check."
+  "warning": "Citizens are obliged to carry with them their ID card or ARC and to present the SMS sent to their mobile phones in case of a police check.",
+  "privacy_policy": "Privacy Policy",
+  "geo_no": "NO",
+  "geo_yes": "YES",
+  "geo_not_found": "Not found",
+  "geo_your_postal_code": "Your postal code",
+  "official_guidelines": "Guidelines for Citizens",
+  "privacy_data": "This application is made for your convenience only and it doesn't collect and store any data or messages outside of your device.",
+  "privacy_source": "This application is open source."
 }

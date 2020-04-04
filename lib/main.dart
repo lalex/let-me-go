@@ -34,35 +34,15 @@ class MyApp extends StatelessWidget {
       },
       title: 'Let me go',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Let me go'),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  MyHomePage({Key key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -75,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController _controllerPostalCode, _controllerIdPassport;
   String _postalCode = '';
   String _id = '';
-  String _purpose = '1';
+  String _purpose = '';
 
   @override
   void initState() {
@@ -139,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             actions: <Widget>[
               FlatButton(
-                child: Text('OK'),
+                child: Text(MaterialLocalizations.of(context).okButtonLabel),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -156,7 +136,9 @@ class _MyHomePageState extends State<MyHomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Privacy Policy'),
+          title: Text(
+            AppLocalizations.of(context).translate("privacy_policy"),
+          ),
           content: SingleChildScrollView(
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -164,18 +146,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: <Widget>[
                 Container(
                   child:
-                      Text("This application is made for your convinience only "
-                          "and it doesn't store any data or messages "
-                          "outside of your device."),
+                      Text(AppLocalizations.of(context).translate('privacy_data')),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 20),
-                  child: Text("This application is open source."),
+                  child: Text(AppLocalizations.of(context).translate('privacy_source')),
                 ),
               ])),
           actions: <Widget>[
             FlatButton(
-              child: Text('OK'),
+              child: Text(MaterialLocalizations.of(context).okButtonLabel),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -186,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  _showPosition() {
+  void _showPosition() {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -196,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 List<Widget> children;
                 List<Widget> actions = <Widget>[];
 
-                if (snapshot.hasData) {
+                if (snapshot.hasData) { // found
                   String postalCode = snapshot.data;
                   children = <Widget>[
                     Text(
@@ -209,13 +189,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   ];
                   actions = <Widget>[
                     FlatButton(
-                      child: Text('No'),
+                      child: Text(
+                          AppLocalizations.of(context).translate('geo_no')),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
                     ),
                     FlatButton(
-                      child: Text('Yes'),
+                      child: Text(
+                          AppLocalizations.of(context).translate('geo_yes')),
                       onPressed: () {
                         setState(() {
                           _controllerPostalCode.text = postalCode;
@@ -225,31 +207,32 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                     ),
                   ];
-                } else if (snapshot.hasError) {
-                  children = <Widget>[Text('Location failed')];
+                } else if (snapshot.hasError) { // error
+                  children = <Widget>[
+                    Text(
+                        AppLocalizations.of(context).translate('geo_not_found'))
+                  ];
                   actions = <Widget>[
                     FlatButton(
-                      child: Text('OK'),
+                      child: Text(
+                          MaterialLocalizations.of(context).okButtonLabel),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
                     ),
                   ];
-                } else {
+                } else { // in progress
                   children = <Widget>[
                     SizedBox(
                       child: CircularProgressIndicator(),
                       width: 30,
                       height: 30,
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: Text("getting..."),
-                    )
                   ];
                   actions = <Widget>[
                     FlatButton(
-                      child: Text('Cancel'),
+                      child: Text(
+                          MaterialLocalizations.of(context).cancelButtonLabel),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
@@ -257,7 +240,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   ];
                 }
                 return AlertDialog(
-                  title: Center(child: Text('Your postal code')),
+                  title: Center(
+                      child: Text(AppLocalizations.of(context)
+                          .translate('geo_your_postal_code'))),
                   content: SingleChildScrollView(
                     child: Column(
                       children: children,
@@ -281,7 +266,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(AppLocalizations.of(context).translate("title")),
 //        actions: <Widget>[
 //          DropdownButton<String>(
 //            value: _locale,
@@ -310,14 +295,14 @@ class _MyHomePageState extends State<MyHomePage> {
             Container(
               height: 65,
               child: DrawerHeader(
-                child: Text(''),
                 decoration: BoxDecoration(
                   color: Theme.of(context).accentColor,
                 ),
               ),
             ),
             ListTile(
-              title: Text('Official Guidelines'),
+              title: Text(AppLocalizations.of(context).translate("official_guidelines")),
+              trailing: Icon(Icons.open_in_new),
               onTap: () async {
                 const url = 'https://covid19.cy/index_en.html';
                 if (await canLaunch(url)) {
@@ -326,7 +311,9 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              title: Text('Privacy Policy'),
+              title: Text(
+                AppLocalizations.of(context).translate("privacy_policy"),
+              ),
               onTap: () {
                 _showPrivacyPolicy();
               },
@@ -379,7 +366,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 leading: Icon(Icons.perm_identity, size: 36.0),
                 title: TextField(
                   decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context).translate("id")),
+                    labelText: AppLocalizations.of(context).translate("id"),
+                    suffixIcon: Visibility(
+                        visible: _id.isNotEmpty,
+                        child: IconButton(
+                          icon: Icon(Icons.clear),
+                          onPressed: () => setState(() {
+                            _controllerIdPassport.text = '';
+                            _id = '';
+                          }),
+                        )),
+                  ),
                   controller: _controllerIdPassport,
                   onChanged: (String value) => setState(() {
                     _id = value;
@@ -395,9 +392,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   decoration: InputDecoration(
                       labelText:
                           AppLocalizations.of(context).translate("purpose")),
-                  value: _purpose,
+                  //value: _purpose,
                   isExpanded: true,
                   iconSize: 24,
+                  icon: IconButton(
+                    icon: Icon(Icons.keyboard_arrow_down),
+                  ),
                   onChanged: (String newValue) {
                     setState(() {
                       _purpose = newValue;
@@ -438,56 +438,71 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               Divider(),
-              Container(
-                width: 490,
-                child: Card(
-                  child: Column(
-                    children: <Widget>[
-                      ListTile(
-                          leading: Icon(Icons.message, size: 36.0),
-                          title: RichText(
-                            text: TextSpan(
-                              text: _messageText(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1
-                                  .apply(
-                                      fontSizeFactor: MediaQuery.of(context)
-                                              .devicePixelRatio *
-                                          1.5),
-                            ),
-                          ),
-                          subtitle: Text(
-                              AppLocalizations.of(context).translate("to") +
-                                  " " +
-                                  _shortNumber),
-                          trailing: Ink(
-                            decoration: ShapeDecoration(
-                              color: Theme.of(context).accentColor,
-                              shape: CircleBorder(),
-                            ),
-                            child: IconButton(
-                              icon: Icon(Icons.send, color: Colors.white),
-                              onPressed: () {
-                                _sendSMS();
-                              },
-                            ),
-                          )),
-                    ],
+              Visibility(
+                visible: _postalCode.isNotEmpty &&
+                    _id.isNotEmpty &&
+                    _purpose.isNotEmpty,
+                child: Column(children: [
+                  Container(
+                    width: 490,
+                    child: Card(
+                      child: Column(
+                        children: <Widget>[
+                          ListTile(
+                              leading: Icon(Icons.message, size: 36.0),
+                              title: RichText(
+                                text: TextSpan(
+                                  text: _messageText(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .apply(
+                                          fontSizeFactor: MediaQuery.of(context)
+                                                  .devicePixelRatio *
+                                              1.5),
+                                ),
+                              ),
+                              subtitle: Text(
+                                  AppLocalizations.of(context).translate("to") +
+                                      " " +
+                                      _shortNumber),
+                              trailing: Ink(
+                                decoration: ShapeDecoration(
+                                  color: Theme.of(context).accentColor,
+                                  shape: CircleBorder(),
+                                ),
+                                child: IconButton(
+                                  icon: Icon(Icons.send, color: Colors.white),
+                                  onPressed: () {
+                                    _sendSMS();
+                                  },
+                                ),
+                              )),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Divider(),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
-                child: Text(
-                  AppLocalizations.of(context).translate("warning"),
-                  textAlign: TextAlign.justify,
-                ),
+                  Divider(),
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
+                    child: Text(
+                      AppLocalizations.of(context).translate("warning"),
+                      textAlign: TextAlign.justify,
+                    ),
+                  ),
+                ]),
               ),
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: FlatButton(
+        child: Text(
+          AppLocalizations.of(context).translate("privacy_policy"),
+          textAlign: TextAlign.center,
+        ),
+        onPressed: _showPrivacyPolicy,
       ),
     );
   }
