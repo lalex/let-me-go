@@ -9,14 +9,32 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => new _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  AppLocalizationsDelegate _appLocalizationsDelegate;
+
+  @override
+  void initState() {
+    super.initState();
+    _appLocalizationsDelegate = AppLocalizationsDelegate(Locale('en'));
+  }
+
+  onLocaleChange(Locale locale) {
+    setState(() {
+      _appLocalizationsDelegate = AppLocalizationsDelegate(locale);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       supportedLocales: [Locale('en'), Locale('el'), Locale('ru')],
       localizationsDelegates: [
-        AppLocalizations.delegate,
+        _appLocalizationsDelegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate
       ],
@@ -35,13 +53,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: MyHomePage(
+        localeChangeCallback: onLocaleChange,
+      ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+  MyHomePage({Key key, this.localeChangeCallback}) : super(key: key);
+
+  LocaleChangeCallback localeChangeCallback;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -50,11 +72,17 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String _shortNumber = '8998';
   List<String> _purposes = <String>['1', '2', '3', '4', '5', '6', '7', '8'];
+  Map<String, String> _languages = <String, String>{
+    'en': 'En',
+    'el': 'Ελ',
+    'ru': 'Ру'
+  };
 
   TextEditingController _controllerPostalCode, _controllerIdPassport;
   String _postalCode = '';
   String _id = '';
   String _purpose = '';
+  String _language = 'en';
 
   @override
   void initState() {
@@ -269,31 +297,35 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(
-          AppLocalizations.of(context).translate("title"),
+        title: Text(AppLocalizations.of(context).translate("title"),
             style: TextStyle(
               fontSize: 14,
-            )
-        ),
-//        actions: <Widget>[
-//          DropdownButton<String>(
-//            value: _locale,
-//            iconSize: 24,
-//            elevation: 16,
-//            onChanged: (String newValue) {
-//              setState(() {
-//                _locale = newValue;
-//              });
-//            },
-//            items: <String>["ru", "en", "el"]
-//                .map<DropdownMenuItem<String>>((String lang) {
-//              return DropdownMenuItem<String>(
-//                value: lang,
-//                child: Text(lang.toUpperCase()),
-//              );
-//            }).toList(),
-//          ),
-//        ],
+            )),
+        actions: <Widget>[
+          DropdownButton<String>(
+            value: _language,
+            iconSize: 24,
+            elevation: 16,
+            onChanged: (String newValue) {
+              widget.localeChangeCallback(Locale(newValue));
+              setState(() {
+                _language = newValue;
+              });
+            },
+            items: _languages
+                .map<String, DropdownMenuItem<String>>(
+                    (String lang, String title) {
+                  return MapEntry<String, DropdownMenuItem<String>>(
+                      lang,
+                      DropdownMenuItem<String>(
+                        value: lang,
+                        child: Text(title),
+                      ));
+                })
+                .values
+                .toList(),
+          ),
+        ],
       ),
       drawer: Drawer(
         child: ListView(
