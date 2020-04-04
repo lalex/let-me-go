@@ -23,8 +23,7 @@ class MyApp extends StatelessWidget {
       localeResolutionCallback: (locale, supportedLocales) {
         // Check if the current device locale is supported
         for (var supportedLocale in supportedLocales) {
-          if (supportedLocale.languageCode == locale.languageCode &&
-              supportedLocale.countryCode == locale.countryCode) {
+          if (supportedLocale.languageCode == locale.languageCode) {
             return supportedLocale;
           }
         }
@@ -145,12 +144,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                 Container(
-                  child:
-                      Text(AppLocalizations.of(context).translate('privacy_data')),
+                  child: Text(
+                      AppLocalizations.of(context).translate('privacy_data')),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 20),
-                  child: Text(AppLocalizations.of(context).translate('privacy_source')),
+                  child: Text(
+                      AppLocalizations.of(context).translate('privacy_source')),
                 ),
               ])),
           actions: <Widget>[
@@ -176,7 +176,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 List<Widget> children;
                 List<Widget> actions = <Widget>[];
 
-                if (snapshot.hasData) { // found
+                if (snapshot.hasData) {
+                  // found
                   String postalCode = snapshot.data;
                   children = <Widget>[
                     Text(
@@ -207,21 +208,23 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                     ),
                   ];
-                } else if (snapshot.hasError) { // error
+                } else if (snapshot.hasError) {
+                  // error
                   children = <Widget>[
                     Text(
                         AppLocalizations.of(context).translate('geo_not_found'))
                   ];
                   actions = <Widget>[
                     FlatButton(
-                      child: Text(
-                          MaterialLocalizations.of(context).okButtonLabel),
+                      child:
+                          Text(MaterialLocalizations.of(context).okButtonLabel),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
                     ),
                   ];
-                } else { // in progress
+                } else {
+                  // in progress
                   children = <Widget>[
                     SizedBox(
                       child: CircularProgressIndicator(),
@@ -266,7 +269,12 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(AppLocalizations.of(context).translate("title")),
+        title: Text(
+          AppLocalizations.of(context).translate("title"),
+            style: TextStyle(
+              fontSize: 14,
+            )
+        ),
 //        actions: <Widget>[
 //          DropdownButton<String>(
 //            value: _locale,
@@ -301,7 +309,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             ListTile(
-              title: Text(AppLocalizations.of(context).translate("official_guidelines")),
+              title: Text(AppLocalizations.of(context)
+                  .translate("official_guidelines")),
               trailing: Icon(Icons.open_in_new),
               onTap: () async {
                 const url = 'https://covid19.cy/index_en.html';
