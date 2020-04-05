@@ -304,28 +304,49 @@ class _MyHomePageState extends State<MyHomePage> {
             )),
         actions: <Widget>[
           Center(
-            child: DropdownButton<String>(
-              value: _language,
-              iconSize: 24,
-              elevation: 16,
-              onChanged: (String newValue) {
-                widget.localeChangeCallback(Locale(newValue));
-                setState(() {
-                  _language = newValue;
-                });
-              },
-              items: _languages
-                  .map<String, DropdownMenuItem<String>>(
-                      (String lang, String title) {
-                    return MapEntry<String, DropdownMenuItem<String>>(
-                        lang,
-                        DropdownMenuItem<String>(
-                          value: lang,
-                          child: Text(title),
-                        ));
-                  })
-                  .values
-                  .toList(),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _language,
+                iconSize: 24,
+                iconEnabledColor:
+                    DefaultTextStyle.of(context).style.decorationColor,
+                elevation: 16,
+                onChanged: (String newValue) {
+                  widget.localeChangeCallback(Locale(newValue));
+                  setState(() {
+                    _language = newValue;
+                  });
+                },
+                items: _languages
+                    .map<String, DropdownMenuItem<String>>(
+                        (String lang, String title) {
+                      return MapEntry<String, DropdownMenuItem<String>>(
+                          lang,
+                          DropdownMenuItem<String>(
+                            value: lang,
+                            child: Text(title),
+                          ));
+                    })
+                    .values
+                    .toList(),
+                selectedItemBuilder: (BuildContext context) {
+                  return _languages
+                      .map<String, DropdownMenuItem<String>>(
+                          (String lang, String title) {
+                        return MapEntry<String, DropdownMenuItem<String>>(
+                            lang,
+                            DropdownMenuItem<String>(
+                              value: lang,
+                              child: Text(
+                                title,
+                                style: DefaultTextStyle.of(context).style,
+                              ),
+                            ));
+                      })
+                      .values
+                      .toList();
+                },
+              ),
             ),
           ),
         ],
@@ -366,178 +387,165 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       body: SingleChildScrollView(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Container(
-          constraints: BoxConstraints(maxWidth: 640),
-          child: Column(
-            // Column is also a layout widget. It takes a list of children and
-            // arranges them vertically. By default, it sizes itself to fit its
-            // children horizontally, and tries to be as tall as its parent.
-            //
-            // Invoke "debug painting" (press "p" in the console, choose the
-            // "Toggle Debug Paint" action from the Flutter Inspector in Android
-            // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-            // to see the wireframe for each widget.
-            //
-            // Column has various properties to control how it sizes itself and
-            // how it positions its children. Here we use mainAxisAlignment to
-            // center the children vertically; the main axis here is the vertical
-            // axis because Columns are vertical (the cross axis would be
-            // horizontal).
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              ListTile(
-                leading: Icon(Icons.local_post_office, size: 36.0),
-                title: TextField(
-                  decoration: InputDecoration(
-                      labelText:
-                          AppLocalizations.of(context).translate("post_code"),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.my_location),
-                        onPressed: () => _showPosition(),
-                      )),
-                  controller: _controllerPostalCode,
-                  onChanged: (String value) => setState(() {
-                    _postalCode = value;
-                  }),
-                  keyboardType: TextInputType.numberWithOptions(
-                      signed: false, decimal: false),
-                ),
-              ),
-              Divider(),
-              ListTile(
-                leading: Icon(Icons.perm_identity, size: 36.0),
-                title: TextField(
-                  decoration: InputDecoration(
-                    labelText: AppLocalizations.of(context).translate("id"),
-                    suffixIcon: Visibility(
-                        visible: _id.isNotEmpty,
-                        child: IconButton(
-                          icon: Icon(Icons.clear),
-                          onPressed: () => setState(() {
-                            _controllerIdPassport.text = '';
-                            _id = '';
-                          }),
+        child: Center(
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 640),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.local_post_office, size: 36.0),
+                  title: TextField(
+                    decoration: InputDecoration(
+                        labelText:
+                            AppLocalizations.of(context).translate("post_code"),
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.my_location),
+                          onPressed: () => _showPosition(),
                         )),
+                    controller: _controllerPostalCode,
+                    onChanged: (String value) => setState(() {
+                      _postalCode = value;
+                    }),
+                    keyboardType: TextInputType.numberWithOptions(
+                        signed: false, decimal: false),
                   ),
-                  controller: _controllerIdPassport,
-                  onChanged: (String value) => setState(() {
-                    _id = value;
-                  }),
-                  keyboardType: TextInputType.numberWithOptions(
-                      signed: false, decimal: false),
                 ),
-              ),
-              Divider(),
-              ListTile(
-                leading: Icon(Icons.question_answer, size: 36.0),
-                title: DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                      labelText:
-                          AppLocalizations.of(context).translate("purpose")),
-                  //value: _purpose,
-                  isExpanded: true,
-                  iconSize: 24,
-                  icon: IconButton(
-                    icon: Icon(Icons.keyboard_arrow_down),
+                Divider(),
+                ListTile(
+                  leading: Icon(Icons.perm_identity, size: 36.0),
+                  title: TextField(
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context).translate("id"),
+                      suffixIcon: Visibility(
+                          visible: _id.isNotEmpty,
+                          child: IconButton(
+                            icon: Icon(Icons.clear),
+                            onPressed: () => setState(() {
+                              _controllerIdPassport.text = '';
+                              _id = '';
+                            }),
+                          )),
+                    ),
+                    controller: _controllerIdPassport,
+                    onChanged: (String value) => setState(() {
+                      _id = value;
+                    }),
+                    keyboardType: TextInputType.numberWithOptions(
+                        signed: false, decimal: false),
                   ),
-                  onChanged: (String newValue) {
-                    setState(() {
-                      _purpose = newValue;
-                    });
-                  },
-                  items: _purposes.map<DropdownMenuItem<String>>((String r) {
-                    return DropdownMenuItem<String>(
-                      value: r,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 0.0),
-                        child: RichText(
-                            text: TextSpan(children: <TextSpan>[
-                          TextSpan(
-                            text: "[${r}] ",
-                            style: Theme.of(context).textTheme.bodyText1,
-                          ),
-                          TextSpan(
-                            text: AppLocalizations.of(context)
-                                .translate("purpose_${r}"),
-                            style: Theme.of(context).textTheme.bodyText2,
-                          )
-                        ])),
-                      ),
-                    );
-                  }).toList(),
-                  selectedItemBuilder: (BuildContext context) {
-                    return _purposes.map<Widget>((String r) {
-                      return Text(
-                        "[${r}] " +
-                            AppLocalizations.of(context)
-                                .translate("purpose_${r}"),
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
+                ),
+                Divider(),
+                ListTile(
+                  leading: Icon(Icons.question_answer, size: 36.0),
+                  title: DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                        labelText:
+                            AppLocalizations.of(context).translate("purpose")),
+                    //value: _purpose,
+                    isExpanded: true,
+                    iconSize: 24,
+                    icon: IconButton(
+                      icon: Icon(Icons.keyboard_arrow_down),
+                    ),
+                    onChanged: (String newValue) {
+                      setState(() {
+                        _purpose = newValue;
+                      });
+                    },
+                    items: _purposes.map<DropdownMenuItem<String>>((String r) {
+                      return DropdownMenuItem<String>(
+                        value: r,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 0.0),
+                          child: RichText(
+                              text: TextSpan(children: <TextSpan>[
+                            TextSpan(
+                              text: "[${r}] ",
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+                            TextSpan(
+                              text: AppLocalizations.of(context)
+                                  .translate("purpose_${r}"),
+                              style: Theme.of(context).textTheme.bodyText2,
+                            )
+                          ])),
+                        ),
                       );
-                    }).toList();
-                  },
+                    }).toList(),
+                    selectedItemBuilder: (BuildContext context) {
+                      return _purposes.map<Widget>((String r) {
+                        return Text(
+                          "[${r}] " +
+                              AppLocalizations.of(context)
+                                  .translate("purpose_${r}"),
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                        );
+                      }).toList();
+                    },
+                  ),
                 ),
-              ),
-              Divider(),
-              Visibility(
-                visible: _postalCode.isNotEmpty &&
-                    _id.isNotEmpty &&
-                    _purpose.isNotEmpty,
-                child: Column(children: [
-                  Container(
-                    width: 490,
-                    child: Card(
-                      child: Column(
-                        children: <Widget>[
-                          ListTile(
-                              leading: Icon(Icons.message, size: 36.0),
-                              title: RichText(
-                                text: TextSpan(
-                                  text: _messageText(),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1
-                                      .apply(
-                                          fontSizeFactor: MediaQuery.of(context)
-                                                  .devicePixelRatio *
-                                              1.5),
+                Divider(),
+                Visibility(
+                  visible: _postalCode.isNotEmpty &&
+                      _id.isNotEmpty &&
+                      _purpose.isNotEmpty,
+                  child: Column(children: [
+                    Container(
+                      width: 490,
+                      child: Card(
+                        child: Column(
+                          children: <Widget>[
+                            ListTile(
+                                leading: Icon(Icons.message, size: 36.0),
+                                title: RichText(
+                                  text: TextSpan(
+                                    text: _messageText(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .apply(
+                                            fontSizeFactor:
+                                                MediaQuery.of(context)
+                                                        .devicePixelRatio *
+                                                    1.5),
+                                  ),
                                 ),
-                              ),
-                              subtitle: Text(
-                                  AppLocalizations.of(context).translate("to") +
-                                      " " +
-                                      _shortNumber),
-                              trailing: Ink(
-                                decoration: ShapeDecoration(
-                                  color: Theme.of(context).accentColor,
-                                  shape: CircleBorder(),
-                                ),
-                                child: IconButton(
-                                  icon: Icon(Icons.send, color: Colors.white),
-                                  onPressed: () {
-                                    _sendSMS();
-                                  },
-                                ),
-                              )),
-                        ],
+                                subtitle: Text(AppLocalizations.of(context)
+                                        .translate("to") +
+                                    " " +
+                                    _shortNumber),
+                                trailing: Ink(
+                                  decoration: ShapeDecoration(
+                                    color: Theme.of(context).accentColor,
+                                    shape: CircleBorder(),
+                                  ),
+                                  child: IconButton(
+                                    icon: Icon(Icons.send, color: Colors.white),
+                                    onPressed: () {
+                                      _sendSMS();
+                                    },
+                                  ),
+                                )),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Divider(),
-                  Container(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
-                    child: Text(
-                      AppLocalizations.of(context).translate("warning"),
-                      textAlign: TextAlign.justify,
+                    Divider(),
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
+                      child: Text(
+                        AppLocalizations.of(context).translate("warning"),
+                        textAlign: TextAlign.justify,
+                      ),
                     ),
-                  ),
-                ]),
-              ),
-            ],
+                  ]),
+                ),
+              ],
+            ),
           ),
         ),
       ),
