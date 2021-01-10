@@ -506,11 +506,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyText1
-                                        .apply(
-                                            fontSizeFactor:
-                                                MediaQuery.of(context)
-                                                        .devicePixelRatio *
-                                                    1.5),
+                                        .apply(fontSizeFactor: 2.0),
                                   ),
                                 ),
                                 subtitle: Text(AppLocalizations.of(context)
